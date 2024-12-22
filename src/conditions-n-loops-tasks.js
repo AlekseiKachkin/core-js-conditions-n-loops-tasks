@@ -446,23 +446,42 @@ function rotateMatrix(matrix) {
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
 
-function sortByAsc(arr) {
-  let isSorted = false;
-  let k = 0;
-  const result = arr;
-  while (!isSorted) {
-    let min = arr[k];
-    for (let i = k; i < arr.length; i += 1) {
-      if (arr[i] < min) {
-        min = arr[i];
-        result[i] = arr[k];
-        result[k] = min;
-      }
+function partition(arr, left, right) {
+  const pivot = arr[Math.floor((right + left) / 2)];
+  const doppler = arr;
+  let start = left;
+  let end = right;
+  while (start <= end) {
+    while (arr[start] < pivot) {
+      start += 1;
     }
-    k += 1;
-    if (k === arr.length) isSorted = true;
+    while (arr[end] > pivot) {
+      end -= 1;
+    }
+    if (start <= end) {
+      [doppler[start], doppler[end]] = [arr[end], arr[start]];
+      start += 1;
+      end -= 1;
+    }
+  }
+  return start;
+}
+
+function sortHelper(arr, left, right) {
+  if (arr.length <= 1) {
+    return arr;
+  }
+  const index = partition(arr, left, right);
+  if (left < index - 1) {
+    sortHelper(arr, left, index - 1);
+  }
+  if (index < right) {
+    sortHelper(arr, index, right);
   }
   return arr;
+}
+function sortByAsc(arr) {
+  return sortHelper(arr, 0, arr.length - 1);
 }
 
 /**
